@@ -1,0 +1,58 @@
+'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+    'Desenvolvido por: Nielk Nauan
+    'Nome da Macro: Sub CopilarDadosCertoValor+formatacaocondicional()
+    'Função da Macro: Copilar e filtra um dado com um determinado valor.
+'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+
+Sub CopilarDadosCertoValor()
+
+Dim LastRow As Long
+Dim lastRowDestino As Long
+Dim i As Long
+Dim rangeToMerge As String
+
+Sheets("Planilha2").Select
+Range("A1").Activate
+
+' planilas que receberam os valores de destino e origem
+
+LastRow = Sheets("Base").Cells(Sheets("Base").Rows.Count, "A").End(xlUp).Row
+lastRowDestino = Sheets("Planilha2").Cells(Sheets("Planilha2").Rows.Count, "A").End(xlUp).Row
+
+For i = 1 To LastRow
+    If Sheets("Base").Cells(i, 8).Value = "DESCONSOLIDAÇÃO(FRETE)" Then
+        lastRowDestino = Sheets("Planilha2").Cells(Sheets("Planilha2").Rows.Count, "A").End(xlUp).Row + 1
+        Sheets("Planilha2").Range("A" & lastRowDestino).Resize(1, 14).Value = _
+        Sheets("Base").Range("B" & i).Resize(1, 14).Value
+    End If
+Next i
+
+' Quando chegar na ultima linha ele formata condição
+rangeToMerge = "A" & lastRowDestino + 1 & ":N" & lastRowDestino + 1
+
+With Sheets("Planilha2").Range(rangeToMerge)
+    .HorizontalAlignment = xlCenter
+    .VerticalAlignment = xlCenter
+    .WrapText = False
+    .Orientation = 0
+    .AddIndent = False
+    .IndentLevel = 0
+    .ShrinkToFit = False
+    .ReadingOrder = xlContext
+    .MergeCells = False
+End With
+With Sheets("Planilha2").Range(rangeToMerge).Interior
+    .Pattern = xlGray75
+    .PatternColorIndex = xlAutomatic
+    .ColorIndex = xlAutomatic
+    .TintAndShade = 0
+    .PatternTintAndShade = 0
+End With
+
+Sheets("Planilha2").Range(rangeToMerge).Merge
+
+Sheets("Base").Select
+Range("A1").Activate
+
+End Sub
+
